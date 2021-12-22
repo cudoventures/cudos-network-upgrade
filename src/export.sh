@@ -1,3 +1,5 @@
+sudo docker stop "$START_CONTAINER_NAME"
+
 cd "$WORKING_DIR/CudosBuilders/docker/binary-builder"
 sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build
 cd "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME"

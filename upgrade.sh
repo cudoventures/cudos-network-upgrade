@@ -228,3 +228,6 @@ echo $CHAIN_ID
 
 alias START_NODE
 alias COPY_ENV
+
+./src/export.sh
+./src/migrate.sh
