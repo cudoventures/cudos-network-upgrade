@@ -57,7 +57,8 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
 fi
 
 if [ $SHOULD_USE_PREDEFINED_GENESIS = "true" ]; then
-    docker cp "$WORKING_DIR/CudosNetworkUpgrade/config/$GENESIS_JSON_NAME" $(docker ps -aqf "name=$START_CONTAINER_NAME"):/usr/cudos/CudosBuilders
+    CUDOS_HOME=$(sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "echo \"\$CUDOS_HOME\"");
+    docker cp "$WORKING_DIR/CudosNetworkUpgrade/config/$GENESIS_JSON_NAME" $(docker ps -aqf "name=$START_CONTAINER_NAME"):"$CUDOS_HOME/config/genesis.json"
 fi
 
 sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cudos-noded unsafe-reset-all";
