@@ -5,6 +5,8 @@ if [ $WORKING_DIR = '' ]; then
     exit
 fi
 
+export WORKING_DIR="$WORKING_DIR"
+
 if ([ $# != 3 ]) || ([ $1 != "testnet-private" ] && [ $1 != 'testnet-public' ]) || ([ $2 != "full-node" ] && [ $2 != 'root-node' ] && [ $2 != 'seed-node' ] && [ $2 != 'sentry-node' ]) || ([ $3 != "client" ] && [ $3 != 'root-zone-01' ] && [ $3 != 'root-zone-02' ] && [ $3 != 'root-zone-03' ]); then
     echo 'Usage: upgrade.sh [network] [node-name] [mode]';
     echo '[network] = testnet-private|testnet-public';
@@ -229,5 +231,87 @@ echo $CHAIN_ID
 alias START_NODE
 alias COPY_ENV
 
-./src/export.sh
-./src/migrate.sh
+# EXPORT
+sudo docker stop "$START_CONTAINER_NAME"
+
+cd "$WORKING_DIR/CudosBuilders/docker/binary-builder"
+sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build
+cd "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME"
+sudo sed -i "s/cudos-noded start/sleep infinity/g" "./start-$NODE_NAME.dockerfile"
+sudo sed -i "s/ --state-sync.snapshot-interval 2000 --state-sync.snapshot-keep-recent 2//g" "./start-$NODE_NAME.dockerfile"
+START_NODE
+
+sudo docker container exec "$START_CONTAINER_NAME" /bin/bash -c "rm -rf \"\$CUDOS_HOME/backup\""
+sudo docker container exec "$START_CONTAINER_NAME" /bin/bash -c "mkdir -p \"\$CUDOS_HOME/backup\""
+sudo docker container exec "$START_CONTAINER_NAME" /bin/bash -c "cudos-noded export |& tee \"\$CUDOS_HOME/backup/genesis.exported.json\""
+sudo docker stop "$START_CONTAINER_NAME"
+
+sudo rm -rf "$WORKING_DIR/CudosData/$DATA_FOLDER-backup"
+sudo cp -r "$WORKING_DIR/CudosData/$DATA_FOLDER" "$WORKING_DIR/CudosData/$DATA_FOLDER-backup"
+
+# MIGRATE
+cd "$WORKING_DIR"
+
+sudo mv ./CudosNode ./CudosNode-backup
+sudo mv ./CudosGravityBridge ./CudosGravityBridge-backup
+sudo mv ./CudosBuilders ./CudosBuilders-backup
+
+git clone --depth 1 --branch cudos-dev https://github.com/CudoVentures/cudos-node.git CudosNode
+git clone --depth 1 --branch cudos-dev  https://github.com/CudoVentures/cudos-builders.git CudosBuilders
+git clone --depth 1 --branch cudos-dev https://github.com/CudoVentures/cosmos-gravity-bridge.git CudosGravityBridge
+
+cd "$WORKING_DIR/CudosBuilders"
+cd ./docker/binary-builder
+sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build
+
+cd "$WORKING_DIR"
+COPY_ENV
+
+cd "$WORKING_DIR/CudosBuilders"
+cd "./docker/$NODE_NAME"
+sed -i "s/cudos-noded start/sleep infinity/g" "./start-$NODE_NAME.dockerfile"
+sed -i "s/ --state-sync.snapshot-interval 2000 --state-sync.snapshot-keep-recent 2//g" "./start-$NODE_NAME.dockerfile"
+START_NODE
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.exported.json\" \"\$CUDOS_HOME/backup/genesis.migrated.json\""
+
+sudo docker container exec $START_CONTAINER_NAME apt-get update
+
+sudo docker container exec $START_CONTAINER_NAME apt-get install jq -y
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.migrated.json\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gov.deposit_params.max_deposit_period = \"86400s\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gov.voting_params.voting_period = \"86400s\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos10ltqnr7ll8tjg4c2f4tdtqj784v29t39lq9w08\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1t9rqh0739058p3gtgye77uqf3q57sxsjxf04fh\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1g9c9vtls5vx92gwvqvxfavpzrk08muqmmdhwn6\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/Joan's proper denom/joansproperdenom/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.nft.collections = [.app_state.nft.collections[] | .denom.symbol = \"sym\" + .denom.name]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\""
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\""
+
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cudos-noded unsafe-reset-all"
+
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" \"\$CUDOS_HOME/config/genesis.json\""
+
+cd "$WORKING_DIR/CudosBuilders"
+cd "./docker/$NODE_NAME"
+sed -i "s/sleep infinity/cudos-noded start/g" "./start-$NODE_NAME.dockerfile"
+
+if [ $NODE_NAME != 'seed-node' ] || [ $NODE_NAME != 'sentry-node' ]; then
+    sed -i "s/sleep infinity/cudos-noded start --state-sync.snapshot-interval 2000 --state-sync.snapshot-keep-recent 2/g" "./start-$NODE_NAME.dockerfile";
+fi
+
+START_NODE
