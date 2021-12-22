@@ -3,7 +3,7 @@ source ./vars.sh
 
 sudo docker stop "$START_CONTAINER_NAME"
 
-if [ $SHOULD_USE_PREDEFINED_GENESIS = "false"]; then
+if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     cd "$WORKING_DIR/CudosBuilders/docker/binary-builder";
     sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build;
     cd "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME";
