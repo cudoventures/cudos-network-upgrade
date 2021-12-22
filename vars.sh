@@ -20,6 +20,7 @@ export NODE_NAME="$2"
 
 if [ $1 = "testnet-private" ]; then 
     export CHAIN_ID=cudos-testnet-private;
+    export GENESIS_JSON_NAME=genesis.testnet.private.json
 
     if [ $3 = "client" ]; then 
 
@@ -89,6 +90,7 @@ fi
 
 if [ $1 = "testnet-public" ]; then 
     export CHAIN_ID=cudos-testnet-public;
+    export GENESIS_JSON_NAME=genesis.testnet.public.json
 
     if [ $3 = "client" ]; then 
 
@@ -222,5 +224,3 @@ if [ $1 = "testnet-public" ]; then
     fi
 
 fi
-
-alias sudo=""
