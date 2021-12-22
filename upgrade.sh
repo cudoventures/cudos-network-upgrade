@@ -10,5 +10,5 @@ echo $CHAIN_ID
 alias START_NODE
 alias COPY_ENV
 
-./src/export.sh
-./src/migrate.sh
+./src/export.sh $1 $2 $3
+./src/migrate.sh $1 $2 $3

@@ -1,3 +1,4 @@
+#!/bin/bash -i
 source ./config/.env
 
 if [ $WORKING_DIR = '' ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash -i
-source ../vars.sh
+source ./vars.sh
 
 sudo docker stop "$START_CONTAINER_NAME"
 
