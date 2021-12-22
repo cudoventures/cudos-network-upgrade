@@ -1,5 +1,5 @@
 #!/bin/bash -i
-source ../vars.sh
+source ./vars.sh
 
 cd "$WORKING_DIR"
 
