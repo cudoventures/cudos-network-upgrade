@@ -224,3 +224,8 @@ if [ $1 = "testnet-public" ]; then
     fi
 
 fi
+
+DOCKERIGNORE_PATH="$WORKING_DIR/.dockerignore"
+if [ ! -f "$DOCKERIGNORE_PATH" ]; then
+    echo "CudosData" >> $DOCKERIGNORE_PATH;
+fi
