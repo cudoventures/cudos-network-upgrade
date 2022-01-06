@@ -4452,9 +4452,14 @@
           "erc20": "0x28ea52f3ee46cac5a72f72e8b3a387c0291d586d"
         }
       ],
+      "last_latest_valset_nonce": "1",
       "last_observed_nonce": "45",
       "last_outgoing_batch_id": "25",
+      "last_slashed_batched_block": "1829232",
+      "last_slashed_logic_call_block": "0",
+      "last_slashed_valset_nonce": "1",
       "last_tx_pool_id": "6",
+      "last_un_bonding_block_height": "0",
       "logic_call_confirms": [],
       "logic_calls": [],
       "params": {
