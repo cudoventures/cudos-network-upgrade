@@ -39,13 +39,13 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gov.voting_params.voting_period = \"86400s\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos10ltqnr7ll8tjg4c2f4tdtqj784v29t39lq9w08\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1dslwarknhfsw3pfjzxxf5mn28q3ewfectw0gta\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1t9rqh0739058p3gtgye77uqf3q57sxsjxf04fh\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos198qaeg4wkf9tn7y345dhk2wyjmm0krdm85uqwc\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1g9c9vtls5vx92gwvqvxfavpzrk08muqmmdhwn6\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos15jpukx39rtkt8w3u3gzwwvyptdeyejcjade6he\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"hello hello hello\\\"/\\\"hellohellohello\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
