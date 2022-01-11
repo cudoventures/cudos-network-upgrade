@@ -48,7 +48,18 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.static_val_cosmos_addrs += [\"cudos1g9c9vtls5vx92gwvqvxfavpzrk08muqmmdhwn6\"]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/Joan's proper denom/joansproperdenom/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"hello hello hello\\\"/\\\"hellohellohello\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"created with some other account\\\"/\\\"createdwithsomeotheraccount\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"Cat Food\\\"/\\\"catfood\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"FromRussia\\\"/\\\"fromrussia\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"Baal\\\"/\\\"baal\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"My secure denom\\\"/\\\"mysecuredenom\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"another denom\\\"/\\\"anotherdenom\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"Joan's first denom\\\"/\\\"joansfirstdenom\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"My first denom\\\"/\\\"myfirstdenom\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"The ADM NFT COllection\\\"/\\\"theadmnftcollection\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"created with some other account new\\\"/\\\"createdwithsomeotheraccountnew\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"created with some other account new2\\\"/\\\"createdwithsomeotheraccountnew2\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.nft.collections = [.app_state.nft.collections[] | .denom.symbol = \"sym\" + .denom.name]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
