@@ -31,4 +31,6 @@ alias START_NODE
 alias COPY_ENV
 
 ./src/export.sh $1 $2 $3
+sudo docker system prune -a -f
+sudo docker image prune -a -f
 ./src/migrate.sh $1 $2 $3

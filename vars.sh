@@ -16,6 +16,10 @@ if ([ $# != 3 ]) || ([ $1 != "testnet-private" ] && [ $1 != 'testnet-public' ]) 
     exit
 fi
 
+export RED_COLOR='\033[1;31m'
+export GREEN_COLOR='\033[1;32m'
+export NO_COLOR='\033[m'
+
 export NODE_NAME="$2"
 
 if [ $1 = "testnet-private" ]; then 
@@ -227,5 +231,7 @@ fi
 
 DOCKERIGNORE_PATH="$WORKING_DIR/.dockerignore"
 if [ ! -f "$DOCKERIGNORE_PATH" ]; then
-    echo "CudosData" >> $DOCKERIGNORE_PATH;
+    echo "CudosData" > $DOCKERIGNORE_PATH;
 fi
+
+alias sudo=""

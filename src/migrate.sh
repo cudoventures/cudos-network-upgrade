@@ -3,9 +3,9 @@ source ./vars.sh
 
 cd "$WORKING_DIR"
 
-sudo mv ./CudosNode ./CudosNode-backup
-sudo mv ./CudosGravityBridge ./CudosGravityBridge-backup
-sudo mv ./CudosBuilders ./CudosBuilders-backup
+sudo rm -rf ./CudosNode
+sudo rm -rf ./CudosGravityBridge
+sudo rm -rf ./CudosBuilders
 
 git clone --depth 1 --branch cudos-dev https://github.com/CudoVentures/cudos-node.git CudosNode
 git clone --depth 1 --branch cudos-dev  https://github.com/CudoVentures/cudos-builders.git CudosBuilders

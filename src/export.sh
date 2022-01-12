@@ -16,6 +16,3 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     sudo docker container exec "$START_CONTAINER_NAME" /bin/bash -c "cudos-noded export |& tee \"\$CUDOS_HOME/backup/genesis.exported.json\"";
     sudo docker stop "$START_CONTAINER_NAME";
 fi
-
-sudo rm -rf "$WORKING_DIR/CudosData/$DATA_FOLDER-backup"
-sudo cp -r "$WORKING_DIR/CudosData/$DATA_FOLDER" "$WORKING_DIR/CudosData/$DATA_FOLDER-backup"
