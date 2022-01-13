@@ -1,6 +1,10 @@
 #!/bin/bash -i
 source ./vars.sh
 
+# - do not start the upgrade unless the chain is stopped
+# - check for Errors while building the docker images
+# - remove useless logs and leave helpful log messages
+
 if [ -d "$WORKING_DIR/CudosData/$DATA_FOLDER-backup" ]; then
     echo 'ERROR: Cannot upgrade because $WORKING_DIR/CudosData/$DATA_FOLDER-backup exists'
     exit

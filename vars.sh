@@ -9,7 +9,7 @@ fi
 export WORKING_DIR="$WORKING_DIR"
 
 if ([ $# != 3 ]) || ([ $1 != "testnet-private" ] && [ $1 != 'testnet-public' ]) || ([ $2 != "full-node" ] && [ $2 != 'root-node' ] && [ $2 != 'seed-node' ] && [ $2 != 'sentry-node' ]) || ([ $3 != "client" ] && [ $3 != 'root-zone-01' ] && [ $3 != 'root-zone-02' ] && [ $3 != 'root-zone-03' ]); then
-    echo 'Usage: upgrade.sh [network] [node-name] [mode]';
+    echo "Usage: $0 [network] [node-name] [mode]";
     echo '[network] = testnet-private|testnet-public';
     echo '[node-name] = full-node|root-node|seed-node|sentry-node';
     echo '[mode] = client|root-zone-01|root-zone-02|root-zone-03';
@@ -233,5 +233,3 @@ DOCKERIGNORE_PATH="$WORKING_DIR/.dockerignore"
 if [ ! -f "$DOCKERIGNORE_PATH" ]; then
     echo "CudosData" > $DOCKERIGNORE_PATH;
 fi
-
-alias sudo=""
