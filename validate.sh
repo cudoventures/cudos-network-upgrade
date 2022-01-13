@@ -55,8 +55,8 @@ if [ $cudosBuildersBranch != $expectedBranch ]; then
 fi
 
 if [ $3 = "client" ]; then 
-    if [ ! -f "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.private01.env" ]; then 
-        echo -e "${RED_COLOR}Error:${NO_COLOR} The .env file '$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.private01.env' is missing.";
+    if [ ! -f "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env" ]; then 
+        echo -e "${RED_COLOR}Error:${NO_COLOR} The .env file '$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env' is missing.";
         exit;
     fi;
 fi
