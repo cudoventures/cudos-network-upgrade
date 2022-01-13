@@ -35,26 +35,26 @@ expectedBranch="cudos-testnet-public"
 
 cd "$WORKING_DIR/CudosBuilders"
 cudosBuildersBranch=$(git branch --show-current)
-if [ $cudosBuildersBranch != $expectedBranch ]; then 
+if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
     echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
     exit;
 fi
 
 cd "$WORKING_DIR/CudosNode"
 cudosBuildersBranch=$(git branch --show-current)
-if [ $cudosBuildersBranch != $expectedBranch ]; then 
+if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
     echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
     exit;
 fi
 
 cd "$WORKING_DIR/CudosGravityBridge"
 cudosBuildersBranch=$(git branch --show-current)
-if [ $cudosBuildersBranch != $expectedBranch ]; then 
+if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
     echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
     exit;
 fi
 
-if [ $3 = "client" ]; then 
+if [ "$3" = "client" ]; then 
     if [ ! -f "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env" ]; then 
         echo -e "${RED_COLOR}Error:${NO_COLOR} The .env file '$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env' is missing.";
         exit;
