@@ -34,25 +34,27 @@ fi
 expectedBranch="cudos-testnet-public"
 
 cd "$WORKING_DIR/CudosBuilders"
-cudosBuildersBranch=$(git branch --show-current)
-if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
-    echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
-    exit;
+cudosBuildersGitStatus=$(git show -s)
+if ! grep -q "945af42d7522d7b6989e1b782119a0cd2dc2ead2" <<< $cudosBuildersGitStatus ; then 
+    if ! grep -q "2c56748129067adfc460564921534415c819055d" <<< $cudosBuildersGitStatus ; then 
+        echo -e "${RED_COLOR}Error:${NO_COLOR} Commit mismatch for CudosBuilders. Expected '945af42d7522d7b6989e1b782119a0cd2dc2ead2' or '2c56748129067adfc460564921534415c819055d', got '$cudosBuildersGitStatus'";
+        exit;
+    fi;
 fi
 
 cd "$WORKING_DIR/CudosNode"
-cudosBuildersBranch=$(git branch --show-current)
-if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
-    echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
+cudosNodeGitStatus=$(git show -s)
+if ! grep -q "b639d80d420482d5c3f731b194ac202fd580322b" <<< $cudosNodeGitStatus ; then 
+    echo -e "${RED_COLOR}Error:${NO_COLOR} Commit mismatch for CudosNode. Expected 'b639d80d420482d5c3f731b194ac202fd580322b', got '$cudosNodeGitStatus'";
     exit;
-fi
+fi;
 
 cd "$WORKING_DIR/CudosGravityBridge"
-cudosBuildersBranch=$(git branch --show-current)
-if [ "$cudosBuildersBranch" != $expectedBranch ]; then 
-    echo -e "${RED_COLOR}Error:${NO_COLOR} Branch mismatch for CudosBuilders. Expected '$expectedBranch', got '$cudosBuildersBranch'";
+cudosGravityBridgeGitStatus=$(git show -s)
+if ! grep -q "924242c7325a4d88337c3ed885e341fab637f29d" <<< $cudosGravityBridgeGitStatus ; then 
+    echo -e "${RED_COLOR}Error:${NO_COLOR} Commit mismatch for CudosGravityBridge. Expected '924242c7325a4d88337c3ed885e341fab637f29d', got '$cudosGravityBridgeGitStatus'";
     exit;
-fi
+fi;
 
 if [ "$3" = "client" ]; then 
     if [ ! -f "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env" ]; then 
