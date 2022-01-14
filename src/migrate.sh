@@ -3,30 +3,55 @@ source ./vars.sh
 
 cd "$WORKING_DIR"
 
+echo -ne "Cleaning the docker...";
+sudo docker system prune -a -f &> /dev/null
+sudo docker image prune -a -f &> /dev/null
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
+
+echo -ne "Removing the old repos...";
 sudo rm -rf ./CudosNode
 sudo rm -rf ./CudosGravityBridge
 sudo rm -rf ./CudosBuilders
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-git clone --depth 1 --branch cudos-dev https://github.com/CudoVentures/cudos-node.git CudosNode
-git clone --depth 1 --branch cudos-dev  https://github.com/CudoVentures/cudos-builders.git CudosBuilders
-git clone --depth 1 --branch cudos-dev https://github.com/CudoVentures/cosmos-gravity-bridge.git CudosGravityBridge
+echo -ne "Cloning the new repos...";
+git clone -q --depth 1 --branch cudos-dev https://github.com/CudoVentures/cudos-node.git CudosNode
+git clone -q --depth 1 --branch cudos-dev  https://github.com/CudoVentures/cudos-builders.git CudosBuilders
+git clone -q --depth 1 --branch cudos-dev https://github.com/CudoVentures/cosmos-gravity-bridge.git CudosGravityBridge
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-cd "$WORKING_DIR/CudosBuilders"
-cd ./docker/binary-builder
-sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build
+echo -ne "Preparing the binary builder...";
+cd "$WORKING_DIR/CudosBuilders/docker/binary-builder"
+dockerResult=$(sudo docker-compose --env-file ./binary-builder.arg -f ./binary-builder.yml -p cudos-binary-builder build 2> /dev/null)
+if [ "$?" != 0 ]; then
+    echo -e "${RED_COLOR}Error${NO_COLOR}";
+    echo -e "${RED_COLOR}Error:${NO_COLOR} There was an error building the container $?: ${dockerResult}";
+    exit 1;
+fi
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
+echo -ne "Copy the .env...";
 cd "$WORKING_DIR"
 COPY_ENV
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-cd "$WORKING_DIR/CudosBuilders"
-cd "./docker/$NODE_NAME"
+echo -ne "Starting the container for data migration...";
+cd "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME"
 sed -i "s/cudos-noded start/sleep infinity/g" "./start-$NODE_NAME.dockerfile"
 sed -i "s/ --state-sync.snapshot-interval 2000 --state-sync.snapshot-keep-recent 2//g" "./start-$NODE_NAME.dockerfile"
-START_NODE
+dockerResult=$(START_NODE 2> /dev/null)
+if [ "$?" != 0 ]; then
+    echo -e "${RED_COLOR}Error${NO_COLOR}";
+    echo -e "${RED_COLOR}Error:${NO_COLOR} There was an error building the container $?: ${dockerResult}";
+    exit 1;
+fi
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-sudo docker container exec $START_CONTAINER_NAME apt-get update
+echo -ne "Migrating the data...";
 
-sudo docker container exec $START_CONTAINER_NAME apt-get install jq -y
+sudo docker container exec $START_CONTAINER_NAME apt-get update &> /dev/null
+
+sudo docker container exec $START_CONTAINER_NAME apt-get install jq -y &> /dev/null
 
 if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.exported.json\" \"\$CUDOS_HOME/backup/genesis.migrated.json\"";
@@ -82,21 +107,37 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" \"\$CUDOS_HOME/config/genesis.json\"";
 fi
 
+if [ "$(sudo docker container inspect -f '{{.State.Status}}' $START_CONTAINER_NAME 2> /dev/null)" != "running" ]; then
+    echo -e "${RED_COLOR}Error:${NO_COLOR} The container $START_CONTAINER_NAME is not running";
+fi
+
 if [ $SHOULD_USE_PREDEFINED_GENESIS = "true" ]; then
     CUDOS_HOME=$(sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "echo \"\$CUDOS_HOME\"");
     sudo docker cp "$WORKING_DIR/CudosNetworkUpgrade/config/$GENESIS_JSON_NAME" $(sudo docker ps -aqf "name=$START_CONTAINER_NAME"):"$CUDOS_HOME/config/genesis.json"
 fi
 
-sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cudos-noded unsafe-reset-all";
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-sudo docker stop "$START_CONTAINER_NAME"
+echo -ne "Reset the state...";
+sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cudos-noded unsafe-reset-all" &> /dev/null
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
-cd "$WORKING_DIR/CudosBuilders"
-cd "./docker/$NODE_NAME"
+echo -ne "Stopping the container...";
+sudo docker stop "$START_CONTAINER_NAME" &> /dev/null
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";
+
+cd "$WORKING_DIR/CudosBuilders/docker/$NODE_NAME"
 sed -i "s/sleep infinity/cudos-noded start/g" "./start-$NODE_NAME.dockerfile"
 
 if [ $NODE_NAME != 'seed-node' ] || [ $NODE_NAME != 'sentry-node' ]; then
     sed -i "s/sleep infinity/cudos-noded start --state-sync.snapshot-interval 2000 --state-sync.snapshot-keep-recent 2/g" "./start-$NODE_NAME.dockerfile";
 fi
 
-START_NODE
+echo -ne "Starting the upgraded container...";
+dockerResult=$(START_NODE 2> /dev/null)
+if [ "$?" != 0 ]; then
+    echo -e "${RED_COLOR}Error${NO_COLOR}";
+    echo -e "${RED_COLOR}Error:${NO_COLOR} There was an error building the container $?: ${dockerResult}";
+    exit 1;
+fi
+echo -e "${GREEN_COLOR}OK${NO_COLOR}";

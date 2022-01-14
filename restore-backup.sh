@@ -3,22 +3,22 @@ source ./vars.sh
 
 if [ ! -d "$WORKING_DIR/CudosData/$DATA_FOLDER-backup" ]; then
     echo -e "${RED_COLOR}Error:${NO_COLOR} Folder $WORKING_DIR/CudosData/$DATA_FOLDER-backup does not exists";
-    exit;
+    exit 1;
 fi
 
 if [ ! -d "$WORKING_DIR/CudosNode-backup" ]; then
     echo -e "${RED_COLOR}Error:${NO_COLOR} Folder $WORKING_DIR/CudosNode-backup does not exists";
-    exit;
+    exit 1;
 fi
 
 if [ ! -d "$WORKING_DIR/CudosGravityBridge-backup" ]; then
     echo -e "${RED_COLOR}Error:${NO_COLOR} Folder $WORKING_DIR/CudosGravityBridge-backup does not exists";
-    exit;
+    exit 1;
 fi
 
 if [ ! -d "$WORKING_DIR/CudosBuilders-backup" ]; then
     echo -e "${RED_COLOR}Error:${NO_COLOR} Folder $WORKING_DIR/CudosBuilders-backup does not exists";
-    exit;
+    exit 1;
 fi
 
 sudo rm -rf "$WORKING_DIR/CudosData/$DATA_FOLDER"
