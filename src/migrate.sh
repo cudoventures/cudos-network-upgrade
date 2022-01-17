@@ -15,9 +15,9 @@ sudo rm -rf ./CudosBuilders
 echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
 echo -ne "Cloning the new repos...";
-git clone -q --depth 1 --branch cudos-dev https://github.com/CudoVentures/cudos-node.git CudosNode
-git clone -q --depth 1 --branch cudos-dev  https://github.com/CudoVentures/cudos-builders.git CudosBuilders
-git clone -q --depth 1 --branch cudos-dev https://github.com/CudoVentures/cosmos-gravity-bridge.git CudosGravityBridge
+git clone -q --depth 1 --branch cudos-master https://github.com/CudoVentures/cudos-node.git CudosNode
+git clone -q --depth 1 --branch cudos-master  https://github.com/CudoVentures/cudos-builders.git CudosBuilders
+git clone -q --depth 1 --branch cudos-master https://github.com/CudoVentures/cosmos-gravity-bridge.git CudosGravityBridge
 echo -e "${GREEN_COLOR}OK${NO_COLOR}";
 
 echo -ne "Preparing the binary builder...";
