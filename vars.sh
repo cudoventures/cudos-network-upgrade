@@ -162,8 +162,8 @@ if [ $1 = "testnet-public" ]; then
         export ARG="$NODE_NAME.testnet.public.zone02.arg"
 
         if [ $NODE_NAME = "full-node" ]; then
-            export START_CONTAINER_NAME="cudos-start-sentry-node-testnet-public-zone02";
-            export DATA_FOLDER="cudos-data-sentry-node-testnet-public-zone02";
+            export START_CONTAINER_NAME="cudos-start-full-node-testnet-public-zone02";
+            export DATA_FOLDER="cudos-data-full-node-testnet-public-zone02";
 
             alias START_NODE='sudo docker-compose --env-file "./full-node.testnet.public.zone02.arg"  -f "./start-full-node.yml" -p "cudos-start-validator-node-02" up --build -d'
             alias COPY_ENV='cp "./CudosBuilders-backup/docker/$NODE_NAME/full-node.testnet.public.zone02.env" "./CudosBuilders/docker/$NODE_NAME/full-node.testnet.public.zone02.env"'
