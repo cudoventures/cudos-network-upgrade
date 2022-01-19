@@ -10,7 +10,7 @@ source ./vars.sh
 # alias START_NODE
 # alias COPY_ENV
 
-./validate.sh $@
+./validate-fix.sh $@
 if [ "$?" != 0 ]; then
     exit $?;
 fi;
