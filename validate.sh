@@ -21,6 +21,13 @@ if [ ! -d "$WORKING_DIR/CudosBuilders" ]; then
     exit 1;
 fi
 
+if [ ! -d "$WORKING_DIR/CudosNetworkUpgrade" ]; then
+    if [ ! -d "$WORKING_DIR/cudos-network-upgrade" ]; then
+        echo -e "${RED_COLOR}Error:${NO_COLOR} CudosNetworkUpgrade|cudos-network-upgrade folder is missing - $WORKING_DIR/CudosNetworkUpgrade|cudos-network-upgrade does not exists";
+        exit 1;
+    fi;
+fi
+
 if [ "$(sudo docker container inspect -f '{{.State.Status}}' $START_CONTAINER_NAME 2> /dev/null)" != "running" ]; then
     echo -e "${RED_COLOR}Error:${NO_COLOR} The container $START_CONTAINER_NAME is not running";
     exit 1;
