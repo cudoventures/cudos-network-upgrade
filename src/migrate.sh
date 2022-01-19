@@ -110,7 +110,12 @@ fi
 
 if [ $SHOULD_USE_PREDEFINED_GENESIS = "true" ]; then
     CUDOS_HOME=$(sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "echo \"\$CUDOS_HOME\"");
-    sudo docker cp "$WORKING_DIR/CudosNetworkUpgrade/config/$GENESIS_JSON_NAME" $(sudo docker ps -aqf "name=$START_CONTAINER_NAME"):"$CUDOS_HOME/config/genesis.json"
+    if [ -d "$WORKING_DIR/CudosNetworkUpgrade" ]; then
+        sudo docker cp "$WORKING_DIR/CudosNetworkUpgrade/config/$GENESIS_JSON_NAME" $(sudo docker ps -aqf "name=$START_CONTAINER_NAME"):"$CUDOS_HOME/config/genesis.json";
+    fi
+    if [ -d "$WORKING_DIR/cudos-network-upgrade" ]; then
+        sudo docker cp "$WORKING_DIR/cudos-network-upgrade/config/$GENESIS_JSON_NAME" $(sudo docker ps -aqf "name=$START_CONTAINER_NAME"):"$CUDOS_HOME/config/genesis.json";
+    fi
 fi
 
 echo -e "${GREEN_COLOR}OK${NO_COLOR}";
