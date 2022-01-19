@@ -29,8 +29,10 @@ if [ ! -d "$WORKING_DIR/CudosNetworkUpgrade" ]; then
 fi
 
 if [ "$(sudo docker container inspect -f '{{.State.Status}}' $START_CONTAINER_NAME 2> /dev/null)" != "running" ]; then
-    echo -e "${RED_COLOR}Error:${NO_COLOR} The container $START_CONTAINER_NAME is not running";
-    exit 1;
+    if [ "$4" != "--force" ]; then 
+        echo -e "${RED_COLOR}Error:${NO_COLOR} The container $START_CONTAINER_NAME is not running";
+        exit 1;
+    fi;
 fi
 
 if ! grep -q "\"chain_id\": \"$CHAIN_ID\"" "$WORKING_DIR/CudosData/$DATA_FOLDER/config/genesis.json"; then
