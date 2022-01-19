@@ -101,7 +101,7 @@ if [ $1 = "testnet-public" ]; then
         export ARG="$NODE_NAME.client.testnet.public01.arg"
 
         alias START_NODE='sudo docker-compose --env-file "./$NODE_NAME.client.testnet.public01.arg"  -f "./start-$NODE_NAME.yml" -p "cudos-start-$NODE_NAME-client-testnet-public-01" up --build -d'
-        alias COPY_ENV='cp "./CudosBuilders-backup/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env" "./CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env"'
+        alias COPY_ENV='cp -f "./CudosBuilders-backup/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env" "./CudosBuilders/docker/$NODE_NAME/$NODE_NAME.client.testnet.public01.env"'
 
         if [ $NODE_NAME = "full-node" ]; then
             export START_CONTAINER_NAME="cudos-start-full-node-client-testnet-public-01";
