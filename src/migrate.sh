@@ -58,7 +58,7 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
 
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.migrated.json\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.last_latest_valset_nonce = \"47\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.last_latest_valset_nonce = \"48\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.gravity.last_slashed_batched_block = \"0\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
@@ -95,7 +95,10 @@ if [ $SHOULD_USE_PREDEFINED_GENESIS = "false" ]; then
     # sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"created with some other account new\\\"/\\\"createdwithsomeotheraccountnew\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
     # sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "sed -i \"s/\\\"created with some other account new2\\\"/\\\"createdwithsomeotheraccountnew2\\\"/g\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
-    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.nft.collections = [.app_state.nft.collections[] | .denom.symbol = \"sym\" + .denom.name]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.app_state.nft.collections = [.app_state.nft.collections[] | .denom.symbol = \"sym\" + .denom.id]' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
+
+    sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cat \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" | jq '.chain_id = \"cudos-testnet-public-2\"' > \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\"";
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "mv \"\$CUDOS_HOME/backup/genesis.migrated-modified.json.tmp\" \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\"";
 
     sudo docker container exec $START_CONTAINER_NAME /bin/bash -c "cp \"\$CUDOS_HOME/backup/genesis.migrated-modified.json\" \"\$CUDOS_HOME/config/genesis.json\"";
